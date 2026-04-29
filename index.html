@@ -11,11 +11,12 @@
         body {
             margin: 0;
             padding: 0;
-            background: #050505; /* 微亮的黑色，確保載入時不是全黑 */
+            background: #000;
             color: #ffb7c5;
             font-family: 'Noto Sans TC', sans-serif;
             overflow: hidden;
             height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,18 +34,18 @@
             opacity: 0.8;
         }
 
-        /* 開場文字 - 稍微加快出現速度避免空白感 */
+        /* 開場文字 */
         .intro {
             position: absolute;
             width: 80%;
             max-width: 600px;
             color: #fce4ec;
             font-size: clamp(1.5rem, 5vw, 2.5rem);
-            font-weight: 400;
             opacity: 0;
-            animation: intro-fade 3.5s ease-out forwards; /* 4s -> 3.5s */
+            animation: intro-fade 3.5s ease-out forwards;
             text-align: left;
             text-shadow: 0 0 10px rgba(255, 182, 197, 0.5);
+            pointer-events: none;
         }
 
         @keyframes intro-fade {
@@ -59,8 +60,9 @@
             position: absolute;
             text-align: center;
             opacity: 0;
-            animation: logo-shrink 6s ease-out 3.5s forwards; /* 縮短延遲與持續時間 */
+            animation: logo-shrink 6s ease-out 3.5s forwards;
             z-index: 10;
+            pointer-events: none;
         }
 
         .logo h1 {
@@ -85,21 +87,22 @@
             position: absolute;
             width: 60%;
             bottom: 0;
-            height: 50vh;
+            height: 60vh;
             perspective: 400px;
             text-align: justify;
+            z-index: 5;
         }
 
         .crawl-content {
             position: absolute;
             top: 100%;
-            animation: crawl 35s linear 8s forwards; /* 40s -> 35s */
+            animation: crawl 35s linear 8s forwards;
             transform-origin: 50% 100%;
         }
 
         @keyframes crawl {
             0% { top: 100%; transform: rotateX(25deg) translateY(0); }
-            100% { top: -150%; transform: rotateX(25deg) translateY(-2800px); }
+            100% { top: -200%; transform: rotateX(25deg) translateY(-3000px); }
         }
 
         .crawl-content h2 {
@@ -121,54 +124,55 @@
         /* 跳過按鈕 */
         .skip-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background: rgba(255, 133, 162, 0.3);
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: rgba(255, 133, 162, 0.2);
             border: 1px solid #ff85a2;
             color: #ff85a2;
             cursor: pointer;
-            z-index: 100;
+            z-index: 1000;
             transition: all 0.3s;
-            border-radius: 4px;
+            border-radius: 50px;
             backdrop-filter: blur(5px);
+            font-weight: bold;
         }
 
         .skip-btn:hover {
             background: #ff85a2;
             color: #fff;
+            transform: scale(1.1);
         }
 
-        /* 最後行動呼籲區塊 */
+        /* 最後行動呼籲區塊 (CTA) */
         .cta {
-            position: absolute;
+            position: fixed; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
             opacity: 0;
-            display: none; /* 初始隱藏，防止佔據點擊空間 */
-            width: 100%;
-            padding: 20px;
-            z-index: 50;
+            visibility: hidden;
+            width: 90%;
+            max-width: 600px;
+            z-index: 500;
+            transition: opacity 1s ease-in-out;
         }
 
         .cta.visible {
-            display: block;
-            animation: cta-show 1.5s ease-out forwards;
-        }
-
-        @keyframes cta-show {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            opacity: 1;
+            visibility: visible;
         }
 
         .btn-enter {
             display: inline-block;
             margin-top: 2rem;
-            padding: 1.2rem 3rem;
-            font-size: 1.5rem;
+            padding: 1.2rem 3.5rem;
+            font-size: 1.6rem;
             font-weight: bold;
             color: #fff;
             background: linear-gradient(45deg, #ff85a2, #ffb7c5);
-            text-decoration: none;
+            text-decoration: none !important;
             border-radius: 50px;
             box-shadow: 0 0 20px rgba(255, 133, 162, 0.5);
             transition: 0.3s;
@@ -183,9 +187,10 @@
         }
 
         @media (max-width: 768px) {
-            .crawl-container { width: 90%; }
+            .crawl-container { width: 85%; }
             .crawl-content p { font-size: 1.2rem; }
             .crawl-content h2 { font-size: 1.8rem; }
+            .btn-enter { padding: 1rem 2.5rem; font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -193,66 +198,67 @@
 
     <div class="stars"></div>
 
-    <div class="intro">
+    <div class="intro" id="introText">
         在遙遠的靈魂深處...
     </div>
 
-    <div class="logo">
+    <div class="logo" id="mainLogo">
         <h1>心小跳</h1>
     </div>
 
     <div class="crawl-container" id="crawlContainer">
         <div class="crawl-content" id="crawlContent">
             <h2>第一章：命運的召喚</h2>
-            
             <p>這是一個充滿變數的時代。迷霧籠罩著未來，無數的靈魂在十字路口徘徊，尋找著內心的真實渴望。</p>
-
             <p>在神祕的塔羅宇宙中，命運的齒輪已經悄然轉動。每一張牌面都隱藏著通往智慧的關鍵，等待著有緣人的開啟。</p>
-
             <p>心小跳，這位行走在直覺與理性之間的占卜師，已經點燃了神聖的蠟燭。無論是愛情的迷惘、事業的困局，亦或是生命的轉折點...</p>
-
             <p>我們將透過 78 張牌卡的古老對話，為你撥開迷霧，看見那早已寫在星辰之中的指引。</p>
-
             <p>不要害怕黑暗，因為星星只有在最黑的夜裡才會閃耀。準備好，迎接屬於你的啟示...</p>
         </div>
     </div>
 
+    <!-- 結束後的內容 -->
     <div class="cta" id="ctaSection">
-        <h2 class="text-4xl font-bold mb-4 text-white">準備好揭曉你的命運了嗎？</h2>
+        <h2 class="text-3xl md:text-5xl font-bold mb-4 text-white">準備好揭曉你的命運了嗎？</h2>
         <p class="text-xl text-pink-200">讓心小跳為你指引迷津</p>
-        <button class="btn-enter" onclick="alert('進入占卜頁面...')">開始線上占卜</button>
+        <!-- 修正連結至 main.html -->
+        <a href="main.html" class="btn-enter">開始線上占卜</a>
     </div>
 
     <button class="skip-btn" id="skipBtn" onclick="skipAnimation()">跳過動畫</button>
 
     <script>
-        // 自動在動畫結束後顯示 CTA 區塊
-        setTimeout(() => {
-            const cta = document.getElementById('ctaSection');
-            if (cta && !cta.classList.contains('visible')) {
-                showCTA();
-            }
-        }, 42000); // 約動畫結束時間
+        // 設定自動結束動畫的時間
+        const autoShowTimer = setTimeout(() => {
+            showCTA();
+        }, 42000);
 
         function showCTA() {
+            // 隱藏所有動畫元素
+            const intro = document.getElementById('introText');
+            const logo = document.getElementById('mainLogo');
+            const container = document.getElementById('crawlContainer');
+            const skip = document.getElementById('skipBtn');
+
+            if (intro) intro.style.display = 'none';
+            if (logo) logo.style.display = 'none';
+            if (container) container.style.display = 'none';
+            if (skip) skip.style.display = 'none';
+
+            // 顯示最終區塊
             const cta = document.getElementById('ctaSection');
-            cta.classList.add('visible');
-            document.querySelector('.skip-btn').style.display = 'none';
+            if (cta) {
+                cta.classList.add('visible');
+                // 強制確保樣式生效
+                cta.style.opacity = '1';
+                cta.style.visibility = 'visible';
+            }
         }
 
         function skipAnimation() {
-            // 隱藏所有動畫元素
-            document.querySelector('.intro').style.display = 'none';
-            document.querySelector('.logo').style.display = 'none';
-            document.getElementById('crawlContainer').style.display = 'none';
-            
-            // 直接顯示 CTA
-            const cta = document.getElementById('ctaSection');
-            cta.style.animation = 'none';
-            cta.classList.add('visible');
-            cta.style.position = 'relative';
-            
-            document.getElementById('skipBtn').style.display = 'none';
+            // 取消自動計時器並直接顯示內容
+            clearTimeout(autoShowTimer);
+            showCTA();
         }
     </script>
 </body>
