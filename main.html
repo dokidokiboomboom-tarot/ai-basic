@@ -275,7 +275,7 @@
                         <div class="text-center mb-12 relative">
                             <div id="ai-badge-container"></div>
                             <h2 class="text-3xl md:text-4xl serif gold-text mb-3" id="res-title">占卜導航結果</h2>
-                            <p class="text-gray-200 text-lg md:text-xl font-serif italic" id="res-question"></p>
+                            <p class="text-gray-300 italic mb-4" id="res-question"></p>
                         </div>
                         <div class="flex flex-wrap justify-center gap-6 md:gap-10 mb-16" id="res-cards-visual"></div>
                         <div class="max-w-4xl mx-auto reading-content" id="res-detailed-content"></div>
@@ -415,7 +415,7 @@
             const majors = [
                 ["愚者 (0)", "ar00", "純真冒險、無限可能、對宇宙的極度信任", "你正站在一個充滿無限可能的起點。這張牌鼓勵你放下腦袋裡的過度算計，帶著一顆純真的心往前跨步。這不是無知，而是對宇宙有一種極大的信任，代表著靈魂的自由與不計代價的旅程。", "大膽前進，保持初衷，不要在意外界的眼光。", "衝動、考慮不周與逃避現實", "你可能有點太過急躁而忽略了腳下的坑洞，或是過度天真地看待當前的風險，試圖逃避該負的責任。", "暫停一下，確認安全網再跳，別被新鮮感沖昏頭。"],
                 ["魔術師 (I)", "ar01", "有意識的開創、掌控四大元素、溝通與轉化", "你桌上擺放著權杖、聖杯、寶劍與錢幣，代表你已具備解決問題的所有資源。現在是從無到有、顯化夢想的時刻，宇宙正賦予你極強的創造力與說服力。", "主動出擊，展現你的才華，把想法變成實際行動。", "才華被浪費、虛張聲勢或溝通陷阱", "你有能力但缺乏專注，或者目前的狀況只是虛有其表。也可能暗示身邊有人只會說大話，缺乏實質的行動力。", "集中注意力，從小事開始落實，別被華麗的表象欺騙。"],
-                ["女祭司 (II)", "ar02", "深層直覺、潛意識、靜止與隱藏的智慧", "安靜下來，真相不在外面，而在你心裡。這是一張代表陰性力量與智慧沉澱的牌。水面下正在醞釀著答案，你需要的是向內探索，而非向外索求。", "靜觀其變，聽從內心第一道直覺。", "焦慮、忽略直覺或流於表面", "外在的噪音干擾了你的判斷，你可能因為急於求成而忽略了身體或潛意識給你的重要警訊。", "找個安靜的地方獨處冥想，切斷外在資訊的干擾。"],
+                ["女祭司 (II)", "ar02", "深層直覺、潛意識、靜止與隱藏的智慧", "安靜下來，真相不在外面，而在你心裡。這是一張代表陰性力量與智慧沉澱的牌。水面下正在醞釀著答案，你需要的是向內探索，而非向外索求。", "靜觀其變，聽從內心第一道直覺。", "焦慮、忽略直覺或流於表面", "外在的噪音干擾了你的判斷，你可能因為急於求成而忽略了身體或潛意識給 важных警訊。", "找個安靜的地方獨處冥想，切斷外在資訊的干擾。"],
                 ["女皇 (III)", "ar03", "豐盛滋養、母性之愛、感官享受與孕育", "大地豐收，生命充滿生機。這張牌代表著被滋養、溫暖且充滿創造力的能量狀態。無論是感情或事業，都處在一個不斷成長、即將開花結果的美好階段。", "享受當下，大方接受他人的愛，也好好寵愛自己。", "情緒化、過度依賴或停滯", "你可能愛得太窒息，或因為不安全感而試圖控制他人。有時也暗示著過度沉溺於物質享受而引發的怠惰。", "找回心理界線，學習自愛，克制無謂的報復性消費。"],
                 ["皇帝 (IV)", "ar04", "權威秩序、紀律控制、理智結構與防禦", "現在需要用理智來領導局面。皇帝象徵著規則與疆界，這股能量能幫助你把混亂的事物梳理出邏輯，建立起穩固不可破的基礎。", "建立規矩，拿出魄力，用邏輯解決眼前的混亂。", "固執、控制欲過強、霸道或失控", "你可能管得太寬，或者現狀讓你覺得壓力大到難以負荷，導致你變得死板、沒有彈性，甚至引發衝突。", "放低姿態聽聽別人的意見，規矩是死的，人是活的。"],
                 ["教皇 (V)", "ar05", "傳統認同、尋求精神引導、心靈導師與體制", "這張牌代表著信仰、傳統與大眾的認同。它建議你在體制內尋求解答，或是與志同道合、有經驗的前輩連結，遵循已被驗證的道路會是最安全的。", "遵循傳統，虛心向專業人士或長輩尋求建議。", "打破陳規、盲從、錯誤指引或虛偽", "你可能對目前的體制感到厭煩，或者過於迷信某個權威而失去了獨立思考的能力，陷入盲從的危機。", "在打破規矩前想清楚後果，重新找回獨立判斷的能力。"],
@@ -785,9 +785,39 @@
 
         // --- 歷史紀錄邏輯 ---
         function getHistory() { try { return JSON.parse(localStorage.getItem('tarotHistory') || '[]'); } catch (e) { return []; } }
-        function setHistory(h) { localStorage.setItem('tarotHistory', JSON.stringify(h)); }
-        function saveToStorage(r) { let h = getHistory(); if (!h.some(x => x.id === r.id)) { h.unshift(r); if(h.length > 200) h = h.slice(0, 200); setHistory(h); } }
-        function toggleFavoriteCurrent() { const icon = document.getElementById('fav-icon'); let h = getHistory(), idx = h.findIndex(x => x.id === state.currentResult.id); if(idx !== -1) { h[idx].isFavorite = !h[idx].isFavorite; state.currentResult.isFavorite = h[idx].isFavorite; icon.className = h[idx].isFavorite ? "fa-solid fa-star text-yellow-500 text-3xl" : "fa-regular fa-star text-3xl"; setHistory(h); } }
+        
+        function setHistory(h) { 
+            // 將「已收藏」與「一般紀錄」分開，保護收藏的紀錄不會因為筆數太多被洗掉
+            const favorites = h.filter(x => x.isFavorite);
+            let normals = h.filter(x => !x.isFavorite);
+            
+            // 一般紀錄最多保留 200 筆，收藏紀錄永久保留
+            if(normals.length > 200) normals = normals.slice(0, 200);
+            
+            // 合併並依照時間 (ID) 排序
+            const combined = [...favorites, ...normals].sort((a, b) => Number(b.id) - Number(a.id));
+            localStorage.setItem('tarotHistory', JSON.stringify(combined)); 
+        }
+        
+        function saveToStorage(r) { 
+            let h = getHistory(); 
+            if (!h.some(x => x.id === r.id)) { 
+                h.unshift(r); 
+                setHistory(h); 
+            } 
+        }
+        
+        function toggleFavoriteCurrent() { 
+            const icon = document.getElementById('fav-icon'); 
+            let h = getHistory(), idx = h.findIndex(x => x.id === state.currentResult.id); 
+            if(idx !== -1) { 
+                h[idx].isFavorite = !h[idx].isFavorite; 
+                state.currentResult.isFavorite = h[idx].isFavorite; 
+                icon.className = h[idx].isFavorite ? "fa-solid fa-star text-yellow-500 text-3xl" : "fa-regular fa-star text-3xl"; 
+                setHistory(h); 
+            } 
+        }
+        
         function renderHistory(f = 'all', btn = null) {
             const container = document.getElementById('history-list');
             if(btn) { document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('text-pink-400', 'underline', 'font-bold'); b.classList.add('text-gray-400'); }); btn.classList.add('text-pink-400', 'underline', 'font-bold'); }
@@ -809,8 +839,22 @@
                 </div>
             `).join('');
         }
-        function toggleFavoriteList(id) { let h = getHistory(), idx = h.findIndex(x => x.id === id); if(idx !== -1) { h[idx].isFavorite = !h[idx].isFavorite; setHistory(h); renderHistory(); } }
-        function deleteHistory(id) { if(!confirm("確定要刪除這筆回憶嗎？")) return; setHistory(getHistory().filter(x => x.id !== id)); renderHistory(); }
+        
+        function toggleFavoriteList(id) { 
+            let h = getHistory(), idx = h.findIndex(x => x.id === id); 
+            if(idx !== -1) { 
+                h[idx].isFavorite = !h[idx].isFavorite; 
+                setHistory(h); 
+                renderHistory(document.querySelector('.filter-btn.text-pink-400').innerText.includes('收藏') ? 'favorites' : 'all');
+            } 
+        }
+        
+        function deleteHistory(id) { 
+            if(!confirm("確定要刪除這筆回憶嗎？")) return; 
+            setHistory(getHistory().filter(x => x.id !== id)); 
+            renderHistory(document.querySelector('.filter-btn.text-pink-400').innerText.includes('收藏') ? 'favorites' : 'all');
+        }
+        
         function viewHistory(id) {
             const r = getHistory().find(x => x.id === id);
             if(r) {
@@ -827,6 +871,7 @@
             if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
             if (c) setTimeout(() => { c.classList.remove('scale-95', 'opacity-0'); c.classList.add('scale-100', 'opacity-100'); }, 10);
         }
+        
         function closeModal(id) {
             const m = document.getElementById(id), c = document.getElementById(id + '-content');
             if (c) c.classList.add('scale-95', 'opacity-0');
