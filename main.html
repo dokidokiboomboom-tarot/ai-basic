@@ -33,19 +33,14 @@
             background-color: #000;
             color: #e2e8f0;
             margin: 0;
-            overflow: hidden;
+            overflow-x: hidden; /* 允許正常向下捲動 */
+            scroll-behavior: smooth;
         }
 
-        /* --- 3D靈魂穿梭開場動畫 --- */
-        #magical-intro {
-            position: fixed; inset: 0; background: var(--dark-bg); z-index: 1000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            overflow: hidden; perspective: 1000px; padding: 1rem;
-        }
-
+        /* --- 視覺特效與背景 --- */
         .moving-stars {
             position: absolute; inset: -50%; background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-            animation: warpSpeed 60s linear infinite; opacity: 0.5; z-index: 0;
+            animation: warpSpeed 60s linear infinite; opacity: 0.5; z-index: 0; pointer-events: none;
         }
         @keyframes warpSpeed { from { transform: rotate(0deg) scale(1); background-position: 0 0; } to { transform: rotate(5deg) scale(1.2); background-position: -5000px 5000px; } }
 
@@ -75,16 +70,16 @@
         .intro-line {
             opacity: 0; transform: rotateX(30deg) translateZ(-150px) translateY(40px);
             font-size: clamp(0.9rem, 2.5vh, 1.5rem); color: #e2e8f0; margin-bottom: clamp(0.5rem, 2vh, 1.5rem); letter-spacing: 0.1em;
-            animation: dramaticFadeIn 3.5s forwards;
+            animation: dramaticFadeIn 2.5s forwards;
         }
-        .line-1 { animation-delay: 0.5s; } .line-2 { animation-delay: 2.5s; } .line-3 { animation-delay: 4.5s; color: var(--gold); font-weight: bold; }
+        .line-1 { animation-delay: 0.5s; } .line-2 { animation-delay: 1.5s; } .line-3 { animation-delay: 2.5s; color: var(--gold); font-weight: bold; }
         .intro-logo-new {
             opacity: 0; font-family: 'Noto Serif TC', serif; font-weight: 900;
             font-size: clamp(2.5rem, 8vh, 5rem); color: var(--gold); text-shadow: 0 0 25px rgba(251, 113, 133, 0.8);
             margin: clamp(1rem, 4vh, 2.5rem) 0; transform: scale(0.5) translateZ(-200px);
-            animation: logoSmash 3s forwards; animation-delay: 6.5s;
+            animation: logoSmash 2s forwards; animation-delay: 3.5s;
         }
-        .intro-btn-wrap { opacity: 0; animation: dramaticFadeIn 2s forwards; animation-delay: 8s; margin-top: clamp(0.5rem, 2vh, 1.5rem); position: relative; z-index: 10; }
+        
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } 45% { transform: scale(1.15); } }
         @keyframes dramaticFadeIn { to { opacity: 1; transform: rotateX(0) translateZ(0) translateY(0); } }
         @keyframes logoSmash { to { opacity: 1; transform: scale(1) translateZ(0); } }
@@ -99,9 +94,6 @@
             transform: rotate(45deg) translateX(-100%); animation: shimmer 3s infinite;
         }
         @keyframes shimmer { 0%, 20% { transform: rotate(45deg) translateX(-100%); } 80%, 100% { transform: rotate(45deg) translateX(100%); } }
-
-        #tarot-app-container { opacity: 0; transition: opacity 2s ease; visibility: hidden; height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
-        .app-visible { opacity: 1 !important; visibility: visible !important; }
 
         .btn-gold { background: linear-gradient(135deg, #fda4af 0%, #fb7185 100%); color: #1e1525; font-weight: 600; }
         .btn-outline-gold { border: 1px solid var(--gold); color: var(--gold); transition: all 0.3s ease; }
@@ -133,25 +125,8 @@
 </head>
 <body class="antialiased">
 
-    <div id="magical-intro">
-        <div class="moving-stars"></div>
-        <div class="intro-heart-container"><div class="shockwave"></div><div class="intro-heart"><i class="fa-solid fa-heart-pulse"></i></div></div>
-        <div class="text-center px-4 intro-text-container">
-            <p class="intro-line line-1">在這個喧囂的世界裡...</p>
-            <p class="intro-line line-2">有多久，沒有聆聽自己內心的聲音？</p>
-            <p class="intro-line line-3 serif">深呼吸，讓靈魂在這裡靠岸。</p>
-            <h1 class="intro-logo-new">心小跳塔羅</h1>
-        </div>
-        <div class="intro-btn-wrap">
-            <button class="btn-gold shimmer-btn px-10 py-3 rounded-full text-lg tracking-wider" onclick="startApp()">開啟心靈旅程 <i class="fa-solid fa-sparkles ml-2"></i></button>
-        </div>
-        <div class="flying-cards-container">
-            <div class="flying-card fc-1" style="--x: 220; --y: -180; --r1: -15deg; --r2: 30deg;"></div>
-            <div class="flying-card fc-2" style="--x: -260; --y: 120; --r1: 20deg; --r2: -40deg;"></div>
-        </div>
-    </div>
-
     <div id="tarot-app-container">
+        <!-- 導航列 -->
         <nav class="fixed w-full z-50 glass-panel py-4 transition-all" id="navbar">
             <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
                 <div class="text-xl serif gold-text font-semibold flex items-center gap-2"><i class="fa-solid fa-heart-pulse animate-pulse"></i> 心小跳塔羅</div>
@@ -163,15 +138,44 @@
             </div>
         </nav>
 
-        <section id="intro" class="min-h-screen flex items-center justify-center pt-20 px-4 relative overflow-hidden">
+        <!-- 首頁文案整合區 (替換掉原本的鎖定開場畫面) -->
+        <section id="intro" class="min-h-screen flex flex-col items-center justify-center pt-20 px-4 relative overflow-hidden bg-black">
+            <!-- 背景星空與飛梭牌特效 -->
+            <div class="moving-stars"></div>
+            <div class="flying-cards-container">
+                <div class="flying-card fc-1" style="--x: 220; --y: -180; --r1: -15deg; --r2: 30deg;"></div>
+                <div class="flying-card fc-2" style="--x: -260; --y: 120; --r1: 20deg; --r2: -40deg;"></div>
+            </div>
+
+            <!-- 文案與心跳整合 -->
             <div class="max-w-3xl mx-auto text-center relative z-10">
-                <h1 class="text-4xl md:text-6xl serif mb-6 tracking-wider leading-tight">聆聽靈魂的聲音，<br><span class="gold-text gold-glow">遇見未知的自己</span></h1>
-                <p class="text-gray-400 text-lg md:text-xl mb-12 font-light leading-relaxed">我們不預言命運，我們只反映你當下能量的真實。<br>準備好透過塔羅這面明鏡，看見最真實的靈魂頻率嗎？</p>
-                <a href="#app-section" class="btn-gold shimmer-btn px-10 py-3 rounded-full text-lg shadow-lg">進入占卜館 <i class="fa-solid fa-arrow-down ml-2"></i></a>
+                <div class="intro-heart-container">
+                    <div class="shockwave"></div>
+                    <div class="intro-heart"><i class="fa-solid fa-heart-pulse"></i></div>
+                </div>
+
+                <div class="intro-text-container mb-6">
+                    <p class="intro-line line-1">在這個喧囂的世界裡...</p>
+                    <p class="intro-line line-2">有多久，沒有聆聽自己內心的聲音？</p>
+                    <p class="intro-line line-3 serif">深呼吸，讓靈魂在這裡靠岸。</p>
+                    <h1 class="intro-logo-new">心小跳塔羅</h1>
+                </div>
+
+                <p class="text-gray-400 text-lg md:text-xl mb-12 font-light leading-relaxed opacity-0" style="animation: dramaticFadeIn 2s forwards; animation-delay: 4.5s;">
+                    我們不預言命運，我們只反映你當下能量的真實。<br>
+                    準備好透過塔羅這面明鏡，看見最真實的靈魂頻率嗎？
+                </p>
+                
+                <div class="opacity-0" style="animation: dramaticFadeIn 2s forwards; animation-delay: 5.5s;">
+                    <a href="#app-section" class="btn-gold shimmer-btn px-12 py-4 rounded-full text-lg shadow-lg inline-block">
+                        進入占卜館 <i class="fa-solid fa-arrow-down ml-2"></i>
+                    </a>
+                </div>
             </div>
         </section>
 
-        <section id="app-section" class="py-12 px-4 min-h-screen bg-black">
+        <!-- 主程式操作區 -->
+        <section id="app-section" class="py-12 px-4 min-h-screen bg-[#050505] border-t border-gray-900">
             <div class="max-w-6xl mx-auto">
                 <div class="glass-panel rounded-3xl overflow-hidden shadow-2xl">
                     <div class="flex border-b border-gray-700/50">
@@ -280,11 +284,11 @@
             </div>
         </section>
 
-        <section class="py-24 text-center relative border-t border-gray-900 bg-[#050505]">
+        <section class="py-24 text-center relative border-t border-gray-900 bg-black">
             <button onclick="openModal('modal-cta')" class="btn-gold shimmer-btn px-12 py-5 rounded-full text-xl shadow-[0_0_25px_rgba(251,113,133,0.4)] animate-pulse">領取宇宙給你的最後一句話 <i class="fa-solid fa-sparkles ml-2"></i></button>
         </section>
 
-        <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-800">
+        <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-800 bg-black">
             <p>© 2026 心小跳塔羅. 給靈魂一個溫暖靠岸的角落。</p>
         </footer>
 
@@ -304,15 +308,10 @@
     <script>
         const apiKey = "AIzaSyD0ZpZAmh2_N0kD0NFjj6VsamEE3xDuQB8"; 
 
-        function startApp() {
-            document.getElementById('magical-intro').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('magical-intro').style.display = 'none';
-                document.getElementById('tarot-app-container').classList.add('app-visible');
-                document.body.style.overflow = 'auto';
-                selectCategory('love', document.querySelector('.category-btn'));
-            }, 1000);
-        }
+        // 初始化時觸發分類選擇，避免選單為空
+        document.addEventListener("DOMContentLoaded", () => {
+            selectCategory('love', document.querySelector('.category-btn'));
+        });
 
         // --- 核心：AI 解析引擎 (深度五大層次，防廢話機制) ---
         async function fetchAIReading(question, cards, positions, mode) {
@@ -356,6 +355,7 @@
         const archangelMessages = ["【麥可】：拿出勇氣，我守護著你的力量。","【加百列】：說出真實，宇宙會傳遞你的聲音。","【拉斐爾】：深呼吸，綠色的療癒之光正環繞你。","【烏列爾】：那靈光一閃的念頭就是答案。","【夏彌爾】：愛會為你帶路，放輕鬆。","【約菲爾】：清理環境，看見事物的美好。"];
         const universeMessages = ["「想像你渴望的一切已經存在。感受那份喜悅，宇宙就會送到你面前。」","「當你對現有的一切心存感激，你就在吸引更多美好。」","「你的念頭就是種子。專注在『想要』而非『恐懼』。」","「放鬆地信任宇宙。不必擔心如何發生。」","「今天就決定自己要快樂！這是顯化奇蹟的最短捷徑。」"];
 
+        // 補齊 78 張完整的偉特資料庫字典 (本地深度防廢話版)
         const tarotDeck = (function() {
             let deck = [];
             const majors = [
@@ -419,7 +419,7 @@
 
                     if (!isCourt) {
                         upMeaning = `偉特精神：這張牌代表在【${suit.domain}】這方面，你現在碰到了「${rank.up}」的狀態。這不是一個停滯的狀態，而是一個提醒你專注於當下課題的時刻。`;
-                        upAnalysis = `這代表你在${suit.domain}上正處於一個需要「${rank.act}」的階段。塔羅在此強烈暗示，順應這股能量的流動，不要急躁，穩紮穩打地處理眼前的細節，你將會看到具體的進展。如果正在為某事煩心，這正是你該採取的策略方向。`;
+                        upAnalysis = `簡單來說，這代表你在${suit.domain}上正處於一個需要「${rank.act}」的階段。塔羅在此強烈暗示，順應這股能量的流動，不要急躁，穩紮穩打地處理眼前的細節，你將會看到具體的進展。如果正在為某事煩心，這正是你該採取的策略方向。`;
                         upAdvice = `順著這股感覺走吧！在處理相關的事情時，請把注意力放在你的「${suit.domain}」上，勇敢去${rank.act}。`;
                         revMeaning = `偉特精神：這張牌逆位的時候，代表在【${suit.domain}】方面可能出現了「${rank.rev}」。原本正向的頻率可能被外在環境的壓力給阻斷了。`;
                         revAnalysis = `哎呀，這代表能量有點卡住了。你可能在${suit.domain}上遇到了「${suit.neg}」的問題，導致事情不如預期（${rank.rev}）。這其實是一個很棒的提醒，告訴你原本的做法已經不適用了，是時候按下暫停鍵，重新檢視問題的根源。`;
@@ -591,7 +591,7 @@
                 const dispAdv = ai?.cardReadings?.[idx]?.advice || data.advice;
 
                 if (visual) visual.innerHTML += `<div class="text-center w-32 md:w-40"><p class="text-xs text-pink-400 mb-1 font-bold">${pos[idx]}</p><div class="w-full pt-[170%] relative rounded-lg overflow-hidden shadow-lg border border-pink-500/30"><div class="absolute inset-0">${getCardImageHTML(card.imgFileName, card.isReversed)}</div></div><p class="text-xs text-gray-200 mt-2 font-serif">${card.name} <br> ${card.isReversed?'(逆位)':'(正位)'}</p></div>`;
-                detailedHTML += `<div class="bg-gray-800/40 rounded-2xl p-6 md:p-10 border border-gray-700 mb-10 shadow-xl"><div class="flex items-center gap-4 mb-8 border-b border-gray-700/50 pb-5"><div class="w-10 h-10 rounded-full bg-pink-500 text-black flex items-center justify-center font-bold text-lg">${idx+1}</div><h3 class="text-2xl serif text-white">【${pos[idx]}】 ${card.name}</h3></div><div class="space-y-8"><div><h4 class="text-sm font-bold text-pink-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> 偉特牌核心精神：</h4><p class="text-gray-200 text-base leading-relaxed">${dispM}</p></div><div><h4 class="text-sm font-bold text-pink-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-comments"></i> 針對問題的深度解析：</h4><p class="text-gray-200 text-base leading-relaxed">${dispA}</p></div><div class="bg-pink-900/10 p-5 rounded-xl border-l-4 border-pink-500"><h4 class="text-sm font-bold text-pink-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 導師的專屬建議：</h4><p class="text-gray-100 text-sm md:text-base italic">${dispAdv}</p></div></div></div>`;
+                detailedHTML += `<div class="bg-gray-800/40 rounded-2xl p-6 md:p-10 border border-gray-700 mb-10 shadow-xl"><div class="flex items-center gap-4 mb-8 border-b border-gray-700/50 pb-5"><div class="w-10 h-10 rounded-full bg-pink-500 text-black flex items-center justify-center font-bold text-lg">${idx+1}</div><h3 class="text-2xl serif text-white">【${pos[idx]}】 ${card.name}</h3></div><div class="space-y-8"><div><h4 class="text-sm font-bold text-pink-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> 偉特牌核心精神：</h4><p class="text-gray-200 text-base leading-relaxed">${dispM}</p></div><div><h4 class="text-sm font-bold text-pink-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-comments"></i> 針對問題的深度解析：</h4><p class="text-gray-200 text-base leading-relaxed">${dispA}</p></div><div class="bg-pink-900/10 p-5 rounded-xl border-l-4 border-pink-500"><h4 class="text-sm font-bold text-pink-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 導師的小建議：</h4><p class="text-gray-100 text-sm md:text-base italic">${dispAdv}</p></div></div></div>`;
             });
 
             // 防廢話機制的動態統整
